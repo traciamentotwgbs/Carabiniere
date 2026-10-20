@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ary">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>محوّل الحروف إلى رموز</title>
+<style>
+:root{--bg:#0c0a1a;--card:rgba(26,21,54,.88);--border:rgba(139,92,246,.3);--text:#ece9f8;--muted:#aaa3c8;--violet:#8b5cf6;--teal:#2dd4bf;--radius:16px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);line-height:1.6;background:radial-gradient(900px 500px at 10% -10%,#8b5cf640,transparent 60%),radial-gradient(800px 500px at 100% 0%,#2dd4bf2e,transparent 60%),var(--bg);padding:24px 16px 44px}
+.container{max-width:1000px;margin:auto}header{text-align:center;margin-bottom:24px}.logo{width:56px;height:56px;margin:0 auto 12px;border-radius:16px;display:grid;place-items:center;font-size:28px;background:linear-gradient(135deg,var(--violet),var(--teal));box-shadow:0 8px 30px #8b5cf666}
+h1{font-size:clamp(1.55rem,4.5vw,2.3rem);background:linear-gradient(90deg,var(--violet),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+header p,.muted,footer{color:var(--muted)}header p{margin-top:6px}
+.notice{padding:12px 14px;border:1px solid #fbbf2466;background:#fbbf2412;border-radius:12px;margin-bottom:16px;font-size:.9rem}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}@media(max-width:800px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:13px;box-shadow:0 10px 40px #0005}
+h2{font-size:1.15rem}.encode h2{color:#b69aff}.decode h2{color:var(--teal)}
+label{display:block;font-weight:650;font-size:.92rem;margin-bottom:6px}
+textarea,input{width:100%;background:#080614b3;color:var(--text);border:1px solid #9b95bd55;border-radius:12px;padding:12px;font:inherit}
+textarea{min-height:130px;resize:vertical}textarea.output{font-family:ui-monospace,monospace;overflow-wrap:anywhere}
+textarea:focus,input:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px #8b5cf633}
+.buttons{display:flex;gap:9px;flex-wrap:wrap}button{font:inherit;font-weight:650;padding:11px 14px;border-radius:11px;cursor:pointer;border:1px solid #9b95bd55;background:transparent;color:var(--text);flex:1 1 135px}
+button.primary{background:linear-gradient(135deg,var(--violet),#6d3fe0);border:0}button.teal{background:linear-gradient(135deg,var(--teal),#0e9488);border:0;color:#04221f}button:hover{filter:brightness(1.12)}
+#status{margin:14px 0 0;min-height:1.5em;color:var(--teal);text-align:center}
+.symbols{margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px}
+.symbols h2{margin-bottom:10px}.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:8px}
+.pair{background:#08061488;border:1px solid #9b95bd30;border-radius:9px;padding:7px 9px;display:flex;justify-content:space-between;gap:10px}.pair b{font-size:1.2rem;color:var(--teal)}.pair span{color:var(--muted);font-size:.85rem}
+footer{text-align:center;font-size:.82rem;margin-top:22px}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <div class="logo" aria-hidden="true">🔣</div>
+  <h1>محوّل الحروف إلى رموز</h1>
+  <p>شفّر رسائلك بالرموز وشاركها مع صحابك في أي تطبيق</p>
+</header>
+<div class="notice">⚠️ هاد الأداة كتستعمل جدول رموز ثابت، ماشي تشفير قوي. ما تستعملهاش لحماية كلمات السر أو المعلومات الحساسة. خاص صاحبك يستعمل نفس الأداة باش يفك الرسالة.</div>
+<div class="grid">
+<section class="card encode">
+<h2>🔒 حوّل النص إلى رموز</h2>
+<div><label for="plain">كتب الرسالة ديالك</label><textarea id="plain" placeholder="مثال: سلام صاحبي"></textarea></div>
+<div class="buttons"><button class="primary" id="encodeBtn">حوّل إلى رموز ←</button></div>
+<div><label for="coded">الرسالة بالرموز</label><textarea id="coded" class="output" readonly placeholder="الرموز غادي يظهرو هنا..."></textarea></div>
+<div class="buttons"><button id="copyCoded" disabled>📋 نسخ الرموز</button><button id="sendToDecode">↙ نقل لفك الرموز</button></div>
+</section>
+<section class="card decode">
+<h2>🔓 رجّع الرموز إلى نص</h2>
+<div><label for="encodedInput">لسّق الرسالة اللي توصّلت بها</label><textarea id="encodedInput" class="output" placeholder="لسّق الرموز هنا..."></textarea></div>
+<div class="buttons"><button class="teal" id="decodeBtn">← رجّع النص الأصلي</button></div>
+<div><label for="decoded">النص الأصلي</label><textarea id="decoded" readonly placeholder="النص الأصلي غادي يبان هنا..."></textarea></div>
+<div class="buttons"><button id="copyDecoded" disabled>📋 نسخ النص الأصلي</button></div>
+</section>
+</div>
+<section class="symbols">
+<h2>🗝️ جدول الرموز المشترك</h2>
+<p class="muted" style="margin-bottom:12px">كل حرف أو رمز كيتحوّل لسلسلة قصيرة من الرموز. كتدعم العربية واللاتينية والأرقام والإيموجي وعلامات الترقيم. الرموز خاصها تبقى كما هي ملي تبعث الرسالة.</p>
+<div id="legend" class="legend"></div>
+</section>
+<div id="status" role="status" aria-live="polite"></div>
+<footer>كتخدم مباشرة فالمتصفح؛ ما كتحتاجش حساب ولا سيرفر.</footer>
+</div>
+<script>
+"use strict";
+// A stable shared alphabet: each hexadecimal digit has its own symbol.
+// Every Unicode code point becomes six symbols, so Arabic, Latin, emoji and punctuation work.
+const glyphs = ["◆","◇","○","●","△","▽","□","■","☆","★","♧","♣","♡","♥","♢","♠"];
+const reverseGlyph = new Map(glyphs.map((g,i)=>[g,i.toString(16)]));
+function encode(text) {
+  return [...text].map(ch => {
+    const hex = ch.codePointAt(0).toString(16).padStart(6,"0");
+    return [...hex].map(n => glyphs[parseInt(n,16)]).join("");
+  }).join(" ");
+}
+function decode(text) {
+  const clean = text.trim();
+  if (!clean) throw new Error("FORMAT");
+  const tokens = clean.split(/\s+/);
+  return tokens.map(token => {
+    if ([...token].length !== 6) throw new Error("FORMAT");
+    let hex = "";
+    for (const glyph of token) {
+      const digit = reverseGlyph.get(glyph);
+      if (digit === undefined) throw new Error("FORMAT");
+      hex += digit;
+    }
+    const cp = parseInt(hex,16);
+    if (!Number.isFinite(cp) || cp > 0x10ffff || (cp >= 0xd800 && cp <= 0xdfff)) throw new Error("FORMAT");
+    return String.fromCodePoint(cp);
+  }).join("");
+}
+const $=id=>document.getElementById(id);
+const status=$("status");
+function message(s,err=false){status.textContent=s;status.style.color=err?"#fb7185":"#2dd4bf";}
+async function copy(text){
+ try{await navigator.clipboard.writeText(text);return true}catch{
+  const t=document.createElement("textarea");t.value=text;t.style.position="fixed";t.style.opacity="0";document.body.appendChild(t);t.select();
+  let ok=false;try{ok=document.execCommand("copy")}catch{}t.remove();return ok;
+ }
+}
+$("encodeBtn").addEventListener("click",()=>{
+ const value=$("plain").value;if(!value){message("كتب شي رسالة أولاً.",true);return}
+ $("coded").value=encode(value);$("copyCoded").disabled=false;message("تحوّلات الرسالة لرموز بنجاح.");
+});
+$("decodeBtn").addEventListener("click",()=>{
+ try{const value=decode($("encodedInput").value);$("decoded").value=value;$("copyDecoded").disabled=false;message("ترجعات الرسالة للنص الأصلي بنجاح.")}
+ catch{$("decoded").value="";$("copyDecoded").disabled=true;message("الرموز ما بايناش صحيحة أو ناقصة. نسخ الرسالة كاملة بلا تغيير.",true)}
+});
+$("sendToDecode").addEventListener("click",()=>{if($("coded").value){$("encodedInput").value=$("coded").value;message("تنقلات الرسالة لخانة فك الرموز.")}else message("شفّر رسالة أولاً.",true)});
+$("copyCoded").addEventListener("click",async()=>message(await copy($("coded").value)?"تنسخات الرموز.":"ما قدرناش ننسخو؛ نسخهم يدوياً.",false));
+$("copyDecoded").addEventListener("click",async()=>message(await copy($("decoded").value)?"تنسخ النص الأصلي.":"ما قدرناش ننسخوه؛ نسخو يدوياً.",false));
+const legend=$("legend");
+legend.innerHTML="";
+glyphs.forEach((glyph,i)=>{
+ const item=document.createElement("div");item.className="pair";
+ const left=document.createElement("span");left.textContent="الرمز "+(i+1);
+ const right=document.createElement("b");right.textContent=glyph;
+ item.append(left,right);legend.appendChild(item);
+});
+</script></body>
+</html>
